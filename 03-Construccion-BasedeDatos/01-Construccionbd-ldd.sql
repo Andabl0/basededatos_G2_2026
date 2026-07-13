@@ -259,4 +259,163 @@ CREATE TABLE producto (
 GO
 
 
+-- NO ACTION 
+CREATE TABLE cliente (
+	cliente_id INT
+	CONSTRAINT pk_cliente
+	PRIMARY KEY,
+	empresa VARCHAR(20)
+	CONSTRAINT uq_cliente_empresa
+	UNIQUE,
+	direccion VARCHAR(50),
+	tel VARCHAR(15) NOT NULL,
+	activo BIT NOT NULL,
+	created_at DATETIME2 NOT NULL --FECHA Y HORA
+	CONSTRAINT df_cliente_created_at
+	DEFAULT SYSDATETIME(),
+	updated_at DATETIME2 NOT NULL
+	DEFAULT SYSDATETIME ()
+);
+GO
+
+CREATE TABLE telefono(
+telefono_id INT IDENTITY (1,1),
+numero_telefono VARCHAR(15) NOT NULL,
+created_ad DATETIME2 NOT NULL 
+CONSTRAINT df_telefono_created_at
+DEFAULT SYSDATETIME(),
+updated_at DATETIME2 NOT NULL
+CONSTRAINT df_telefono_updated_at
+DEFAULT SYSDATETIME(),
+cliente_id INT,
+CONSTRAINT pk_telefono
+PRIMARY KEY (telefono_id),
+CONSTRAINT uq_telefono_numero_telefono
+UNIQUE (numero_telefono),
+CONSTRAINT ck_telefono_numero_telefono
+CHECK (numero_telefono LIKE '[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]'),
+CONSTRAINT fk_telefono_cliente
+FOREIGN KEY (cliente_id)
+REFERENCES cliente(cliente_id)
+ON DELETE NO ACTION			--EVITA ELIMINAR LA TABLA PADRE, PRIMERO SE ELIMINA LOS HIJOS
+ON UPDATE NO ACTION			
+);
+GO 
+
+INSERT INTO cliente
+VALUES (1, 'Patito de Hule', NULL, '773-def-123', 1, DEFAULT, DEFAULT);
+
+INSERT INTO cliente (cliente_id, empresa, tel, activo)
+VALUES (2, 'Taqueria Mr. Linux', '7731234567', 1);
+
+INSERT INTO telefono (numero_telefono,cliente_id)
+VALUES ('111-345-2347',1);
+
+INSERT INTO telefono (numero_telefono,cliente_id)
+VALUES ('111-345-3456',1),
+	   ('456-678-2836',1),
+	   ('839-827-8291',1),
+	   ('773-146-2476',2);
+
+-- ELIMINAR CON ON DELATE EN NO ACTION --
+
+-- ELIMINAR LOS HIJOS
+
+DELETE FROM telefono
+WHERE cliente_id = 1;
+
+-- DESPUES SE ELIMINA EL PADRE
+DELETE FROM cliente
+WHERE cliente_id = 1;
+
+-- ACTUALIZAR ON UPDATE EN NO ACTION --
+
+-- SE ACTUALIZA EL HIJO PONIENDOLO EN NULO
+UPDATE telefono 
+SET cliente_id = NULL
+WHERE cliente_id= 2
+
+-- SE ACTUALIZA EL PADRE
+UPDATE cliente 
+SET cliente_id = 3
+WHERE cliente_id = 2;
+
+-- ACTUALIZA EL HIJO CON EL NUEVO ID DEL PADRE
+UPDATE telefono 
+SET cliente_id = 3
+WHERE cliente_id IS NULL;
+
+
+CREATE TABLE cliente (
+	cliente_id INT
+	CONSTRAINT pk_cliente
+	PRIMARY KEY,
+	empresa VARCHAR(20)
+	CONSTRAINT uq_cliente_empresa
+	UNIQUE,
+	direccion VARCHAR(50),
+	tel VARCHAR(15) NOT NULL,
+	activo BIT NOT NULL,
+	created_at DATETIME2 NOT NULL --FECHA Y HORA
+	CONSTRAINT df_cliente_created_at
+	DEFAULT SYSDATETIME(),
+	updated_at DATETIME2 NOT NULL
+	DEFAULT SYSDATETIME ()
+);
+GO
+
+CREATE TABLE telefono(
+telefono_id INT IDENTITY (1,1),
+numero_telefono VARCHAR(15) NOT NULL,
+created_ad DATETIME2 NOT NULL 
+CONSTRAINT df_telefono_created_at
+DEFAULT SYSDATETIME(),
+updated_at DATETIME2 NOT NULL
+CONSTRAINT df_telefono_updated_at
+DEFAULT SYSDATETIME(),
+cliente_id INT,
+CONSTRAINT pk_telefono
+PRIMARY KEY (telefono_id),
+CONSTRAINT uq_telefono_numero_telefono
+UNIQUE (numero_telefono),
+CONSTRAINT ck_telefono_numero_telefono
+CHECK (numero_telefono LIKE '[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]'),
+CONSTRAINT fk_telefono_cliente
+FOREIGN KEY (cliente_id)
+REFERENCES cliente(cliente_id)
+ON DELETE CASCADE		
+ON UPDATE CASCADE		
+);
+GO 
+
+INSERT INTO cliente
+VALUES (1, 'Patito de Hule', NULL, '773-def-123', 1, DEFAULT, DEFAULT);
+
+INSERT INTO telefono (numero_telefono,cliente_id)
+VALUES ('111-345-3456',1),
+	   ('456-678-2836',1),
+	   ('839-827-8291',1),
+	   ('773-146-2476',3);
+
+-- ELIMINAR EN ON DELATE CASCADE --
+
+-- ELIMINAR AL PADRE
+DELETE FROM cliente 
+WHERE cliente_id = 1;
+
+
+
+-- ACTUALIZAR EN ON UPDATE CASCADE 
+
+UPDATE cliente
+SET cliente_id = 10
+WHERE cliente_id = 1
+
+
+SELECT * FROM cliente;
+SELECT * FROM telefono;
+DROP TABLE telefono;
+
+
+
 
