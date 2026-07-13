@@ -414,8 +414,109 @@ WHERE cliente_id = 1
 
 SELECT * FROM cliente;
 SELECT * FROM telefono;
+
 DROP TABLE telefono;
 
+-- ON DELETE Y ON 
+CREATE TABLE telefono(
+telefono_id INT IDENTITY (1,1),
+numero_telefono VARCHAR(15) NOT NULL,
+created_ad DATETIME2 NOT NULL 
+CONSTRAINT df_telefono_created_at
+DEFAULT SYSDATETIME(),
+updated_at DATETIME2 NOT NULL
+CONSTRAINT df_telefono_updated_at
+DEFAULT SYSDATETIME(),
+cliente_id INT NULL,
+CONSTRAINT pk_telefono
+PRIMARY KEY (telefono_id),
+CONSTRAINT uq_telefono_numero_telefono
+UNIQUE (numero_telefono),
+CONSTRAINT ck_telefono_numero_telefono
+CHECK (numero_telefono LIKE '[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]'),
+CONSTRAINT fk_telefono_cliente
+FOREIGN KEY (cliente_id) 
+REFERENCES cliente(cliente_id)
+ON DELETE SET NULL		
+ON UPDATE SET NULL		
+);
+GO 
+
+INSERT INTO cliente(cliente_id, empresa, tel, activo)
+VALUES (11,'bimbo','5959897462', 1);
+
+INSERT INTO telefono (numero_telefono,cliente_id)
+VALUES ('111-345-2345',11);
+
+INSERT INTO telefono (numero_telefono,cliente_id)
+VALUES ('941-345-3456',11),
+	   ('456-678-9816',11),
+	   ('839-827-8201',11),
+	   ('323-146-2406',3);
+
+DELETE FROM cliente
+WHERE cliente_id = 11;
+
+SELECT * FROM telefono;
+SELECT * FROM cliente;
+
+UPDATE cliente SET cliente_id = 15
+WHERE cliente_id = 2;
+
+-- ON DELETE Y ON UPDATE SET NULL
+
+CREATE TABLE telefono(
+telefono_id INT IDENTITY (1,1),
+ numero_telefono VARCHAR(15)NOT NULL,
+ created_at DATETIME2 NOT NULL
+ CONSTRAINT df_telefono_created_at
+ DEFAULT SYSDATETIME(),
+ updated_at DATETIME2 NOT NULL
+ CONSTRAINT df_telefono_updated_at
+ DEFAULT SYSDATETIME(),
+ cliente_id INT 
+ CONSTRAINT df_telefono_cliente_id
+ DEFAULT 0,
+ CONSTRAINT pk_telefono
+ PRIMARY KEY (telefono_id),
+ CONSTRAINT uq_telefono_numero_telefono
+ UNIQUE (numero_telefono),
+ CONSTRAINT ck_telefono_numero_telefono_id
+ CHECK (numero_telefono LIKE '[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]'),
+ CONSTRAINT fk_telefono_cliente
+ FOREIGN KEY (cliente_id)
+ REFERENCES cliente (cliente_id)
+ ON DELETE SET DEFAULT
+ ON UPDATE SET DEFAULT
+ );
+GO
+
+INSERT INTO cliente ( cliente_id, empresa,telefono ,activo)
+values (0,'Mostrador','66669147', 1);
+
+ INSERT INTO cliente ( cliente_id, empresa,telefono ,activo)
+values (11,'Bimbo','566788999', 1);
 
 
 
+
+ INSERT INTO telefono(numero_telefono,cliente_id)
+ VALUES ('111-345-3456', 11),
+  ('255-678-2345', 11),
+  ('123-768-2345',11),
+  ('773-143-2476', 15);
+
+
+  SELECT * FROM cliente
+ SELECT * FROM telefono
+
+
+ DELETE FROM cliente 
+ WHERE cliente_id = 10;
+
+ UPDATE cliente 
+SET cliente_id = 17
+WHERE cliente_id = 15;
+
+SELECT * FROM telefono;
+SELECT * FROM cliente;
