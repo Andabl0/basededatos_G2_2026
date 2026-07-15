@@ -8,3 +8,15 @@ CREATE
 ALTER 
 DROP
 ``` 
+
+### ALTER TABLE 
+
+permite modificar una tabla existete 
+
+Puede:
+
+- Agregar columnas
+- Eliminar columnas
+- Modificar columnas
+- Agregar restricciones
+- Eliminar restricciones 
