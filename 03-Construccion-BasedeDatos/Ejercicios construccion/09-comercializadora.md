@@ -142,3 +142,4 @@ GO
 
 SELECT * FROM cliente; 
 ```
+![Ejercicio1ER](/img/Construccion/09-diagrama-comercializadora.jpg)
