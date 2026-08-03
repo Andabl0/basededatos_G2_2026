@@ -203,22 +203,75 @@ DISTINCT (dv.descuento) AS distinto_descuento
 FROM detalle_ventas AS dv;
 
 
+-- DISTI
+
+SELECT 
+	id_cliente,
+	id_empleado
+FROM ventas
+ORDER BY 1 DESC, 2 DESC;
+GO
+
+SELECT 
+	id_categoria,
+	id_producto
+FROM productos
+ORDER BY 1 DESC, 2 DESC;
+GO
+
+-- Uso de TOP
+
+-- Limita la cantidad de filas devueltas por una consulta ( EN POSTGRES ES LIMIT)
+
+SELECT TOP (5) 
+	id_producto,
+	codigo,
+	nombre,
+	precio
+FROM productos;
+
+SELECT TOP (5) 
+	id_producto,
+	codigo,
+	nombre,
+	precio
+FROM productos
+ORDER BY precio DESC;
+
+SELECT TOP (10)
+	nombre
+FROM clientes;
+
+ -- TOP con expresiones calculadas
+
+ SELECT TOP (5)
+	codigo,
+	nombre,
+	precio,
+	existencia,
+	(precio * existencia) AS valor_inventario
+FROM productos;
+
+-- TOP con porcentaje 
+
+-- SQL Sever permite limitar el resultado mediante un porcentaje 
+
+ SELECT TOP (10) PERCENT 
+	codigo,
+	nombre,
+	precio,
+	existencia,
+	(precio * existencia) AS valor_inventario
+FROM productos;
+
+-- Combinar DISTINCT CON EL TOP 
+
+SELECT DISTINCT TOP (3)
+	descuento 
+FROM detalle_ventas;
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+USE comercial_db;
